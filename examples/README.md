@@ -41,6 +41,21 @@ The final result will be saved as `output.mesh`. As mentioned in the paper, for 
 ```
 Your application may need a different parameter. 
 
+## Feature ID matching
+
+When surfaces, curves, and handles are assigned distinct identifiers, `geogram_smooth_patch_matched` ensures that boundary elements are strictly projected onto target geometries sharing the same feature ID. This allows different regions of the mesh to align with independent target features.
+
+```Bash
+./bin/geogram_smooth_patch_matched ../data/cube.mesh ../data/cube.mesh ../data/cube_target_cuves.mesh ../data/cube_target_points.txt [output.mesh]
+```
+
+Feature identifiers are read from the reference integer tags in `.mesh` files:
+* **Target surfaces:** Must be a triangle mesh (`v1 v2 v3 <patch_id>`) to preserve patch IDs (non-triangle surfaces lose tags upon triangulation and fall back to global projection).
+* **Target curves:** Defined under `Edges` (`v1 v2 <curve_id>`).
+* **Target points:** Same format as above, containing vertex handles as `id x y z`.
+* **Input mesh:** Feature facets (triangles, quads, or polygons) and edges tagged with matching IDs.
+* **Fallback:** Elements with no tags or unmatched IDs fall back to the default target tree.
+
 # Handle based deformation
 <img src="/assets/images/bunny.jpg" alt="Bunny handles" width="1200"/>
 
